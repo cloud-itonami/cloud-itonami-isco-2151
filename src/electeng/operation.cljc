@@ -35,7 +35,7 @@
   on proposals that volunteered the numbers. Omitting them was a way to
   be approved. Well-formedness is checked BEFORE the invariants so that
   a missing number is refused rather than skipped."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 ;; Voltage classes this actor recognises (IEC-style bands). A circuit or
 ;; a piece of equipment outside this set is not a mismatch — it is a

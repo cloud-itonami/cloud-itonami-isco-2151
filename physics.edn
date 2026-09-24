@@ -1,0 +1,32 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README: an ISCO 2151 Electrical Engineers blueprint -- design/analysis is
+;; cognitive; physical execution is robotics-gated. The physical execution such
+;; engineers specify: moving a cable drum across a substation site, and the
+;; oil-circulation pump of a power transformer cooler.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-2151"
+ :cases
+ [{:id :cable-drum-move
+   :kind :transport
+   :procedure "site robot moves a cable drum 80 m across the substation yard to the pulling position"
+   :params {:mass-kg 200.0 :distance-m 80.0 :v-max-mps 0.8 :a-max-mps2 0.3
+            :brake-decel-mps2 0.6 :drive-force-n 500.0 :crr 0.04
+            :cog-height-m 0.7 :support-half-length-m 0.5}
+   :sweep {:param :payload-kg :values [100.0 300.0 500.0 800.0 1000.0]}
+   :quantity :cycle-time-s
+   :limit {:max 150.0 :basis "estimate: two and a half minutes per drum move within the pulling crew's setup window"}
+   :boundary {:lo 50.0 :hi 1200.0}}
+  {:id :transformer-oil-circulation
+   :kind :pipe-flow
+   :procedure "oil pump circulates transformer mineral oil through 20 m of 80 mm pipe between tank and radiator bank"
+   :params {:diameter-m 0.08 :length-m 20.0 :roughness-m 4.5e-5
+            :density-kg-m3 870.0 :viscosity-pa-s 0.009 :pump-efficiency 0.5 :elevation-m 0.0}
+   :sweep {:param :q-m3s :values [0.002 0.004 0.006 0.010 0.015]}
+   :quantity :pump-power-w
+   :limit {:max 200.0 :basis "estimate: rating assumed for the cooler's oil pump motor"}
+   :boundary {:lo 0.001 :hi 0.03}}]}
